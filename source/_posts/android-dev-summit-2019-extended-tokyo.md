@@ -1,6 +1,7 @@
 ---
 title: Android Dev Summit 2019 Extended Tokyo参加レポート
 date : 2019-11-16 09:58:14
+tags: Android
 ---
 
 ## 概要
