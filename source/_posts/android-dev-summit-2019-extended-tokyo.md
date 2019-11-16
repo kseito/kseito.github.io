@@ -4,7 +4,7 @@ date : 2019-11-16 09:58:14
 ---
 
 ## 概要
-[Android Dev Summit 2019 Extended Tokyo](https://gdg-tokyo.connpass.com/event/152665/)に参加してきました。
+[Android Dev Summit 2019 Extended Tokyo](https://gdg-tokyo.connpass.com/event/152665/)に参加してきたのでその内容と感想を書こうと思います。
 
 
 ## セッション
@@ -12,14 +12,14 @@ date : 2019-11-16 09:58:14
 
 mhidakaさんのセッションです。スライドは[こちら](https://speakerdeck.com/mhidaka/android-dev-summit-2019-conference-overview-and-keynote-session)
 カンファレンスの概要とキーノートの内容が主なコンテンツです。
-その中で開発者が特に気をつけることとして、OSの開発フロー変更に伴いSDK Target(targetSdkVersionのと同義？)の縛りが、最新OSのバージョン−１となることを挙げていました。要はAndroid 11で自分のアプリを動かすにはtargetSdkVersionが29(30 - 1)である必要があるということです。
+その中で開発者が特に気をつけることとして、OSの開発フロー変更に伴いSDK Target(targetSdkVersionと同義？)の縛りが、最新OSのバージョン−１となることを挙げていました。要はAndroid 11で自分のアプリを動かすにはtargetSdkVersionが29(30 - 1)である必要があるということです。
 発表の内容からはGoogleが「開発者がユーザーの安全を考慮しつつ様々なサイズのデバイスをより早く開発できるようにする」という意思が感じられました。
 
 
 ### Session2: Android Studio 4.0 最新アップデート
 
 wasabeefさんのセッションです。スライドは[こちら](https://speakerdeck.com/wasabeef/whats-new-android-studio-4-dot-0-ja)
-Android Studio 4.0、エミュレーターでできることについての発表です。
+Android Studio 4.0やエミュレーターでできることについての発表です。
 個人的にはjava.utilクラスのバックポート、Multi Previewあたりの機能が恩恵にあやかれそうです。
 デモとしてGoogle Mapのナビのシミュレーションを行ってましたが、ポケモンGOはやるなよ？という振りましたがあり試すしかない案件では？
 
@@ -60,4 +60,4 @@ DBから取り出してから表示するまでの手段がいくつもあって
 
 ## 所感
 近年のAndroid開発はJetpackの登場やAndroid Studioの進化でとても便利で開発しやすいものになったと感じてましたが、Android Studio 4.0でさらに開発しやすくなるのではないかと思わせる内容でした。Android開発はまだまだ加速できる余地が多々ありワクワクしますね。
-このような機会を設けてくださったGDG Tokyoのスタッフ、登壇者、会場提供して会社さんに感謝:pray:
+このような機会を設けてくださったGDG Tokyoのスタッフ、登壇者、会場提供して頂いた会社さんに感謝:pray:
