@@ -1,5 +1,7 @@
 ---
 title: MPAndroidChartのPieChartをカスタマイズしたかった
+date: 2019-12-20 08:27:34
+tags: Android
 ---
 
 ## はじめに
