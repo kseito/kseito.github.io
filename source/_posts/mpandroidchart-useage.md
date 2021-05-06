@@ -11,7 +11,7 @@ tags: Android
 ## やりたかったこと
 まずはじめに、デフォルトの`PieChart`を表示すると下図のようになります。
 
-![デフォルトの円グラフ](./mpandroidchart-useage/device-2019-12-20-074904.png)
+<img src="./mpandroidchart-useage/device-2019-12-20-074904.png" width="320px">
 
 この図に対して下記3点の変更を加えました。
 - 円グラフの太さを変更
@@ -49,7 +49,7 @@ dataSet.setDrawValues(false)
 
 上記３つのプロパティを全て変更すると下図のようなグラフになります。
 
-![諸々変更した円グラフ](./mpandroidchart-useage/device-2019-12-20-074945.png)
+<img src="./mpandroidchart-useage/device-2019-12-20-074945.png" width="320px">
 
 ## 参考サイト
 https://github.com/PhilJay/MPAndroidChart
