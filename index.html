@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>k-seito&#39;s memo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="k-seito&#39;s memo">
+<meta property="og:url" content="https://www.k-seito.tech/index.html">
+<meta property="og:site_name" content="k-seito&#39;s memo">
+<meta property="og:locale" content="ja_JP">
+<meta property="article:author" content="Kazuto Seito">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="k-seito&#39;s memo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">k-seito&#39;s memo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/profile">Profile</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSSフィード"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="検索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://www.k-seito.tech"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-deploy-kmm-library-via-specs-repo" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/09/13/deploy-kmm-library-via-specs-repo/" class="article-date">
+  <time datetime="2022-09-13T03:00:00.000Z" itemprop="datePublished">2022-09-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/09/13/deploy-kmm-library-via-specs-repo/">Kotlin Multiplatform Mobileで作成したライブラリをSpecs Repoを使って配布する時の設定</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>KMMを使ってライブラリを作成しCocoapodsで配布する際に、デフォルトのpodspecファイルだとLinterでエラーになり配布できませんでした。<br>試行錯誤した結果、下記のような修正を行うと無事に配布することができました。</p>
+<h2 id="spec-sourceの変更"><a href="#spec-sourceの変更" class="headerlink" title="spec.sourceの変更"></a>spec.sourceの変更</h2><p>初期値のままだとエラーになります。<br>URLを指定しましょう。</p>
+<h4 id="Before"><a href="#Before" class="headerlink" title="Before"></a>Before</h4><p><code>&#123; :http=&gt; &#39;&#39;&#125;</code></p>
+<h4 id="After"><a href="#After" class="headerlink" title="After"></a>After</h4><p><code>&#123; :git =&gt; &quot;git@github.com:ユーザー名/リポジトリ名.git&quot;, :tag =&gt; spec.version &#125;</code></p>
+<h2 id="spec-preserve-pathsの追加"><a href="#spec-preserve-pathsの追加" class="headerlink" title="spec.preserve_pathsの追加"></a>spec.preserve_pathsの追加</h2><p>preserve_pathsで指定されたファイル以外はダウンロード後に削除されてしまうようなので削除されたくないファイルを指定します。<br>下記のように全てのファイルを残すやり方でもいけました。</p>
+<p><code>spec.preserve_paths = &quot;**/*.*&quot;</code></p>
+<h2 id="spec-vendored-frameworksの変更"><a href="#spec-vendored-frameworksの変更" class="headerlink" title="spec.vendored_frameworksの変更"></a>spec.vendored_frameworksの変更</h2><p>プロジェクトのルートから見た相対パスを指定する必要がありました。</p>
+<h4 id="Before-1"><a href="#Before-1" class="headerlink" title="Before"></a>Before</h4><p><code>&#39;build/cocoapods/framework/shared.framework&#39;</code></p>
+<h4 id="After-1"><a href="#After-1" class="headerlink" title="After"></a>After</h4><p><code>&quot;shared/build/cocoapods/framework/shared.framework&quot;</code></p>
+<h2 id="spec-script-phasesの変更"><a href="#spec-script-phasesの変更" class="headerlink" title="spec.script_phasesの変更"></a>spec.script_phasesの変更</h2><p>REPO_ROOT=プロジェクトのルートになるようなので、その想定で相対パスとGradleタスクのパスを変更します。</p>
+<h4 id="Before-2"><a href="#Before-2" class="headerlink" title="Before"></a>Before</h4><p><code>&quot;$REPO_ROOT/../gradlew&quot; -p &quot;$REPO_ROOT&quot; $KOTLIN_PROJECT_PATH:syncFramework \</code></p>
+<h4 id="After-2"><a href="#After-2" class="headerlink" title="After"></a>After</h4><p><code>&quot;$REPO_ROOT/gradlew&quot; -p &quot;$REPO_ROOT&quot; :shared:syncFramework \</code></p>
+<h2 id="参考サイト"><a href="#参考サイト" class="headerlink" title="参考サイト"></a>参考サイト</h2><p><a target="_blank" rel="noopener" href="https://satoshun.github.io/2021/02/kmm-cocoapods-external-source/">https://satoshun.github.io/2021/02/kmm-cocoapods-external-source/</a><br><a target="_blank" rel="noopener" href="https://www.rubydoc.info/github/CocoaPods/Core/Pod">https://www.rubydoc.info/github/CocoaPods/Core/Pod</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.k-seito.tech/2022/09/13/deploy-kmm-library-via-specs-repo/" data-id="cl87w1fkn000l18n1gsfs9e4k" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cocoapods/" rel="tag">Cocoapods</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/KMM/" rel="tag">KMM</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-variable-length-array-cost-in-rust" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/02/26/variable-length-array-cost-in-rust/" class="article-date">
+  <time datetime="2022-02-26T07:00:00.000Z" itemprop="datePublished">2022-02-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/02/26/variable-length-array-cost-in-rust/">Rustの可変長配列を使用するときのコストについて</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Rustで<a target="_blank" rel="noopener" href="https://github.com/E869120/math-algorithm-book">アルゴリズム</a>の問題を解いていた時に、計算量的には通るはずのコードが通らず…配列の操作が怪しそうだったので配列の追加・削除の速度について調査しました。<br>前提として、今取り組んでいるアルゴリズムの問題は実行時間を1sに収める必要があるかつ計算回数が約350万回です。<br>100万回操作を行うコードを書いて処理にかかった時間に3.5をかけ、1000msを超えてるケースがないか確認しました。</p>
+<h2 id="環境"><a href="#環境" class="headerlink" title="環境"></a>環境</h2><p>IntelliJ IDEA 2021.1.3<br>rustc 1.46.0 (04488afe3 2020-08-24)</p>
+<h2 id="固定長配列の要素追加"><a href="#固定長配列の要素追加" class="headerlink" title="固定長配列の要素追加"></a>固定長配列の要素追加</h2><p>実行したコードは下記になります。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut</span> array = [<span class="number">0</span>; <span class="number">1_000_000</span>];</span><br><span class="line"><span class="keyword">let</span> start_time = SystemTime::now();</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..<span class="number">1_000_000</span> &#123;</span><br><span class="line">    array[i] = i</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, SystemTime::now().duration_since(start_time).unwrap().as_millis());</span><br></pre></td></tr></table></figure>
+<p>計測結果は<br>1回目→42ms<br>2回目→51ms<br>3回目→43ms<br>で平均は45.3msでした。<br>45.3 * 3.5 = 約160msなので原因にはなりづらそうです。</p>
+<h2 id="可変長配列の要素追加"><a href="#可変長配列の要素追加" class="headerlink" title="可変長配列の要素追加"></a>可変長配列の要素追加</h2><p>実行したコードは下記になります。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut</span> array = <span class="built_in">Vec</span>::new();</span><br><span class="line"><span class="keyword">let</span> start_time = SystemTime::now();</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..<span class="number">1_000_000</span> &#123;</span><br><span class="line">    array.push(i);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, SystemTime::now().duration_since(start_time).unwrap().as_millis());</span><br></pre></td></tr></table></figure>
+<p>計算結果は<br>1回目→62ms<br>2回目→63ms<br>3回目→63ms<br>で平均は62.7msでした<br>62.7 * 3.5 = 約220msでこれも原因ではなさそうです。</p>
+<h2 id="可変長配列の要素削除（先頭）"><a href="#可変長配列の要素削除（先頭）" class="headerlink" title="可変長配列の要素削除（先頭）"></a>可変長配列の要素削除（先頭）</h2><p>実行したコードは下記になります。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut</span> array = <span class="built_in">Vec</span>::new();</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..<span class="number">1_000_000</span> &#123;</span><br><span class="line">    array.push(i);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> start_time = SystemTime::now();</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..<span class="number">1_000_000</span> &#123;</span><br><span class="line">    array.remove(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, SystemTime::now().duration_since(start_time).unwrap().as_millis());</span><br></pre></td></tr></table></figure>
+<p>計算結果は<br>1回目→124906ms<br>2回目→107748ms<br>3回目→99213ms<br>で平均は110622.3msでした。<br>完全にこれが原因でした。<br>VectorでQueueのような挙動を実現しようとして<code>remove()</code>を使っていたのですが悪かったようです。</p>
+<h2 id="【おまけ】可変長配列の要素削除（末尾）"><a href="#【おまけ】可変長配列の要素削除（末尾）" class="headerlink" title="【おまけ】可変長配列の要素削除（末尾）"></a>【おまけ】可変長配列の要素削除（末尾）</h2><p>Vectorはスタックとして扱うことができ<code>push()</code>と対となる<code>pop()</code>が準備されています。<br>それを使ったときの速度が<code>remove()</code>と同じになるか気になったので試してみました。<br>実行したコードは下記になります。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut</span> array = <span class="built_in">Vec</span>::new();</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..<span class="number">1_000_000</span> &#123;</span><br><span class="line">    array.push(i);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> start_time = SystemTime::now();</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..<span class="number">1_000_000</span> &#123;</span><br><span class="line">    array.pop();</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, SystemTime::now().duration_since(start_time).unwrap().as_millis());</span><br></pre></td></tr></table></figure>
+<p>計算結果は<br>1回目→82ms<br>2回目→72ms<br>3回目→72ms<br>で平均は75.3msでした。<br>この速度の違いはいったい…<br>Rustのコードを見てみたら納得しました。<br><code>pop()</code>は単純に今持っている配列のサイズ-1番目の要素を削除するだけですが、<code>remove()</code>はindexで指定した位置の要素を削除した後に、指定した位置より後ろにある要素たちをコピーして削除した要素を埋める形でずらしているようです。<br>今回の場合、indexの指定が常に0なのでremoveとの相性がかなり悪かったです。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.k-seito.tech/2022/02/26/variable-length-array-cost-in-rust/" data-id="cl87w1fkt001x18n15we73bcl" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Rust/" rel="tag">Rust</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-disable-touch-event-in-jetpack-compose" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/02/10/disable-touch-event-in-jetpack-compose/" class="article-date">
+  <time datetime="2022-02-10T11:00:00.000Z" itemprop="datePublished">2022-02-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/02/10/disable-touch-event-in-jetpack-compose/">Composableのイベント伝達を止める</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Jetpack Composeを使っていると、タップ・ドラッグなどのタッチイベントを他のComposableに伝えず、指定したComposableで消費したいケースがあります。<br>調査した所、消費したいイベントによっていくつか選択肢がありそうでした。<br>自分で試した下記３ケースの実装例を紹介します。</p>
+<ul>
+<li>タップ</li>
+<li>（特定方向の）ドラッグ</li>
+<li>タッチイベント全般</li>
+</ul>
+<h3 id="タップ"><a href="#タップ" class="headerlink" title="タップ"></a>タップ</h3><p>タップだけ消費できれば良い場合は、clickable Modifierに空のイベントを定義しつつindicationをnullにしてRipple Effectが表示されないようにします。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">.clickable(</span><br><span class="line">    interactionSource = remember &#123; MutableInteractionSource() &#125;,</span><br><span class="line">    indication = <span class="literal">null</span>,</span><br><span class="line">    onClick = &#123;&#125;,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h3 id="（特定方向の）ドラッグ"><a href="#（特定方向の）ドラッグ" class="headerlink" title="（特定方向の）ドラッグ"></a>（特定方向の）ドラッグ</h3><p>特定方向のスワイプを無効にしたいケースではdraggable Modifierが使えます。<br>ただ<strong>特定方向</strong>と書いている通り、draggableはorientationを指定する必要がある都合上、指定した方向のスワイプしか無効にできません。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">.draggable(</span><br><span class="line">    interactionSource = remember &#123; MutableInteractionSource() &#125;,</span><br><span class="line">    state = remember &#123; DraggableState &#123;&#125; &#125;,</span><br><span class="line">    orientation = Orientation.Horizontal,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h3 id="タッチイベント全般"><a href="#タッチイベント全般" class="headerlink" title="タッチイベント全般"></a>タッチイベント全般</h3><p>スワイプの方向に関係なくタッチイベントを無効にしたい場合はPointerInputScopeの拡張関数であるdetectDragGesturesが使えます。<br>下記の処理ではドラッグイベントを全て消費することによって他のビューにイベントを与えないようにしています。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.pointerInput(<span class="built_in">Unit</span>) &#123;</span><br><span class="line">    detectDragGestures &#123; change, _ -&gt; change.consumeAllChanges() &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="おまけ（条件付きタッチイベントの無効）"><a href="#おまけ（条件付きタッチイベントの無効）" class="headerlink" title="おまけ（条件付きタッチイベントの無効）"></a>おまけ（条件付きタッチイベントの無効）</h3><p>常にタップやタッチイベントを無効にするというケースは稀で、特定の条件の時のみ無効にしたいというケースがより一般的かと思うのでそのケースも載せておきます。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Box(</span><br><span class="line">    modifier = <span class="keyword">if</span> (isLoading) &#123;</span><br><span class="line">        Modifier.disableTouchEvent()</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        Modifier</span><br><span class="line">    &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.k-seito.tech/2022/02/10/disable-touch-event-in-jetpack-compose/" data-id="cl87w1fkn000j18n14dgg0yl0" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jetpack-Compose/" rel="tag">Jetpack Compose</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-how-to-detect-multitouch-in-jetpack-compose" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/01/15/how-to-detect-multitouch-in-jetpack-compose/" class="article-date">
+  <time datetime="2022-01-15T08:00:00.000Z" itemprop="datePublished">2022-01-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/01/15/how-to-detect-multitouch-in-jetpack-compose/">Jetpack Composeでマルチタップを検知する</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Jetpack Composeでタッチイベントを制御する際にマルチタップを検知する方法がわからなかったので調査しました。</p>
+<h2 id="解決策"><a href="#解決策" class="headerlink" title="解決策"></a>解決策</h2><p><code>PointerEvent</code>に<code>changes</code>というプロパティがあります。<br><code>changes</code>は<code>List</code>型になっておりタッチしている指の数だけ<code>PointerInputChange</code>が追加されるようになっているため、<br>下記のように、このプロパティのサイズを確認すればマルチタップしているかどうかが判定できます。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (event.changes.size == <span class="number">2</span>) &#123;</span><br><span class="line">    <span class="comment">// 指２本でタップしている場合に行いたい処理</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="補足"><a href="#補足" class="headerlink" title="補足"></a>補足</h2><p>公式ドキュメントからはこの使い方が正しいかどうかはわかりませんでした。<br>が、Jetpack Composeの<code>AwaitPointerEventScope.awaitFirstDown()</code>を見ると最初のDownイベントを検知するために<code>event.changes[0]</code>を確認しているのでそこまで的外れではないのかなぁと思っています。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.k-seito.tech/2022/01/15/how-to-detect-multitouch-in-jetpack-compose/" data-id="cl87w1fkp000u18n11f2a49js" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jetpack-Compose/" rel="tag">Jetpack Compose</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-compose-horizontalpager-workaround" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/12/19/compose-horizontalpager-workaround/" class="article-date">
+  <time datetime="2021-12-19T03:00:00.000Z" itemprop="datePublished">2021-12-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/12/19/compose-horizontalpager-workaround/">HorizontalPagerで最初に表示するページを指定する</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>公私共にJetpack Composeを使ってコードを書く頻度が増えてきました。<br>宣言的UIという書き方にまだまだ不慣れということもあり、使い方がわからず（ワンチャンライブラリ側の不具合ということもあるかもしれない）ハマることもしばしば…。<br>今回はそんなハマり所の中で、個人的に多くの時間を費やしてしまったモノを取り上げてみます。</p>
+<h2 id="環境"><a href="#環境" class="headerlink" title="環境"></a>環境</h2><p>Jetpack Compose関連のライブラリのバージョンは下記の通りです。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">implementation &quot;androidx.compose.material:material:1.0.4&quot;</span><br><span class="line">implementation &quot;androidx.compose.ui:ui:1.0.4&quot;</span><br><span class="line">implementation &quot;androidx.compose.ui:ui-tooling:1.0.4&quot;</span><br><span class="line">implementation &quot;androidx.compose.foundation:foundation:1.0.4&quot;</span><br><span class="line">implementation &quot;com.google.accompanist:accompanist-pager:0.20.0&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="問題"><a href="#問題" class="headerlink" title="問題"></a>問題</h2><p>タイトルにもある通り、HorizontalPagerを使って最初に表示ポジションを0ではなくnページ目を表示したいという要求がありました。<br>それに対してJetpack Composeを使ってコードを書いてみたのですがなかなか動かずハマりました。<br>問題となるコードは下記になります。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> position = <span class="number">3</span><span class="comment">// ここで初回表示したいポジションを指定する</span></span><br><span class="line"><span class="keyword">val</span> pagerState = rememberPagerState(position)</span><br><span class="line"></span><br><span class="line">HorizontalPager(</span><br><span class="line">    state = pagerState,</span><br><span class="line">) &#123;</span><br><span class="line">    <span class="comment">// ページ単位で表示するレイアウトを表示</span></span><br><span class="line">&#125;</span><br><span class="line">LaunchedEffect(pagerState) &#123;</span><br><span class="line">    snapshotFlow &#123; pagerState.currentPage &#125;.collect &#123;</span><br><span class="line">        <span class="comment">// ページが変化したときに呼び出す処理</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上記のコードだと、LaunchedEffect内のページが変化したときの処理がHorizontalPager初期化時に呼ばれません。<br>HorizontalPager自体のポジションは期待したものになっていたのでページが変化したときに特に処理を呼び出さないのであれば上記のコードでも問題なく動きます。<br>調査した結果、HorizontalPagerの初期化前にポジションを渡してしまうとLaunchedEffectでページ変化の処理を観測できないようです。<br>よくよく考えると当たり前ですね。</p>
+<h2 id="解決策"><a href="#解決策" class="headerlink" title="解決策"></a>解決策</h2><p>下記のように、HorizontalPagerが呼び出された後にポジションを指定すると、ページ変化の処理を観測しているLaunnedEffectが意図した通り呼ばれるようになります。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> position = <span class="number">3</span><span class="comment">// ここで初回表示したいポジションを指定する</span></span><br><span class="line"><span class="keyword">val</span> pagerState = rememberPagerState()</span><br><span class="line"></span><br><span class="line">HorizontalPager(</span><br><span class="line">    state = pagerState,</span><br><span class="line">) &#123;</span><br><span class="line">    <span class="comment">// ページ単位で表示するレイアウトを表示</span></span><br><span class="line">&#125;</span><br><span class="line">LaunchedEffect(pagerState) &#123;</span><br><span class="line">    snapshotFlow &#123; pagerState.currentPage &#125;.collect &#123;</span><br><span class="line">        <span class="comment">// ページが変化したときに呼び出す処理</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">LaunchedEffect(<span class="built_in">Unit</span>) &#123;</span><br><span class="line">    pagerState.scrollToPage(position)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="所感"><a href="#所感" class="headerlink" title="所感"></a>所感</h2><p>宣言的UIは、先に状態がありそれをUIに流し込むことで表示したいUIを実現する手法だと考えていて、今回のように宣言順序を考慮しないと行けないケースはなかなか気づきづらいです。<br>これはLaunchedEffectという副作用のある処理を書いていることに起因している気がするので、HorizontalPagerにViewPagerでいうonPageSelected的なコールバックが追加されれば解決しそうです。<br>まだ0.20.0なのでこれからに期待。</p>
+<h2 id="参考サイト"><a href="#参考サイト" class="headerlink" title="参考サイト"></a>参考サイト</h2><p><a target="_blank" rel="noopener" href="https://google.github.io/accompanist/pager/">https://google.github.io/accompanist/pager/</a><br><a target="_blank" rel="noopener" href="https://google.github.io/accompanist/pager/#reacting-to-page-changes">https://google.github.io/accompanist/pager/#reacting-to-page-changes</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.k-seito.tech/2021/12/19/compose-horizontalpager-workaround/" data-id="cl87w1fkl000918n11g97h4v0" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jetpack-Compose/" rel="tag">Jetpack Compose</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-droidkaigi-2021" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/10/24/droidkaigi-2021/" class="article-date">
+  <time datetime="2021-10-24T00:00:00.000Z" itemprop="datePublished">2021-10-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/24/droidkaigi-2021/">DroidKaigi 2021に参加しました</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>10/19~21で行われたDroidKaigi 2021に参加してきました。<br>忘れないうちに感想を残しておこうと思います。</p>
+<p>開催期間中は普通に業務をしており、MTGの合間を縫ってセッションを視聴していました。<br>現在、週末を使って諸々のアーカイブを見たりして参加者の皆さんに追いつこうとしている状態です。<br>思ったことを雑に以下の３つにまとめています。</p>
+<h2 id="参加のハードルがとても下がった"><a href="#参加のハードルがとても下がった" class="headerlink" title="参加のハードルがとても下がった"></a>参加のハードルがとても下がった</h2><p>今回初のオンライン開催でしたが、参加のハードルがとても下がったと感じました。<br>私自身DroidKaigiへの参加は４回目（2017年から参加）で、満員電車に乗って新宿まで向かいそこから徒歩で会場まで向かっていた頃と比べるとハードルがないに等しいかもしれません。<br>加えて、冒頭でも述べたとおり業務に追われて中々視聴する時間を取れなかったのですが、各日程終了後すぐにアーカイブ動画の視聴できたため業務終了後の空き時間に視聴することができて助かりました。<br>一方で、アフターパーティのような他社のエンジニアの方と話したり美味しい料理を食べる機会がなくなってしまったのは少し寂しくもあります。</p>
+<h2 id="コンテンツのボリュームがすごい"><a href="#コンテンツのボリュームがすごい" class="headerlink" title="コンテンツのボリュームがすごい"></a>コンテンツのボリュームがすごい</h2><p>セッション自体の数はおそらく前回と変わらないか少し減ったぐらいなのかなと思っていますが、今年のDroidKaigiはセッション以外のコンテンツが豊富で、前夜祭やWeekend Chat、DroirKaigi Ninjasといった新しい取り組みがありました。<br>この辺はまだまだキャッチアップできておらずなんとかしたいです。</p>
+<h2 id="新しく何かを学ぶことは楽しい"><a href="#新しく何かを学ぶことは楽しい" class="headerlink" title="新しく何かを学ぶことは楽しい"></a>新しく何かを学ぶことは楽しい</h2><p>まだ数セッションしか見れていませんが、</p>
+<ul>
+<li>社内のコーディング規約を元にAndroid Lintの警告・エラーを整備すればコードに統一感がでるのは</li>
+<li>Jetpack Composeは既存のViewシステムに比べるとまだパーツが足りてない感があるけど工夫次第でなんとかなりそう</li>
+<li>画像・動画はとりあえずMediaStore APIを使っておけばよさそう</li>
+</ul>
+<p>といった知見や開発を進める上での指針を得ることができました。<br>新しく知見得ると早く試したくてワクワクします。これはカードゲームのデッキを構築する感覚に近いかもしれません。<br>（ユーザーにとって価値のあるプロダクトを作るという大前提はありつつ）さまざまな技術を積み重ねてつくるプロダクトをデッキ、知見１つ１つをカードに例えた時、新しいカードを手に入れたらそれを今あるデッキとどう組み合わせるとより強いデッキが作れるか考える感覚です。<br>（そう考えると、DroidKaigiで知見を得ることはランカーの公開されているデッキを見せてもらえる貴重な機会という見方もできそうです。）</p>
+<h2 id="おわりに"><a href="#おわりに" class="headerlink" title="おわりに"></a>おわりに</h2><p>技術的な側面ばかり書きましたが、個人的にはYoutubeのチャット欄の盛り上がり方も良かったです。（登壇者が自分自身にスパチャを投げるという新しいスパチャ芸？を拝めたのがハイライト）<br>これからゆっくりとコンテンツを消化していこうと思います。<br>DroidKaigiを開催・運営して頂いたスタッフおよび関係者の方々に感謝します。ありがとうございました！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.k-seito.tech/2021/10/24/droidkaigi-2021/" data-id="cl87w1fkm000g18n1fdbp4cji" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-how-to-write-unit-test-in-callback" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/08/20/how-to-write-unit-test-in-callback/" class="article-date">
+  <time datetime="2021-08-20T09:00:00.000Z" itemprop="datePublished">2021-08-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/08/20/how-to-write-unit-test-in-callback/">Androidで単体テストを書く時にコールバックの戻り値をモックする</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>あまり出番はないかもしれませんが、たまに<code>あるクラスからコールバックで返ってきた値を使って何か行う</code>というコードを書く時があります。<br>そのような処理が書かれたクラスを単体テストする方法が分からなかったので調べました。</p>
+<h2 id="解決方法"><a href="#解決方法" class="headerlink" title="解決方法"></a>解決方法</h2><p>Androidアプリ開発において上記のようなケースで単体テストを書きたい場合はMockitoのInvocationOnMockを使います。<br>mockito-kotlinを使って書く場合は下記のようになります。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Hoge</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">getOrCreate</span><span class="params">(listener: (<span class="type">String</span>?) -&gt; <span class="type">Unit</span>)</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> hoge: Hoge = mock()</span><br><span class="line">whenever(hoge.getOrCreate(any())).thenAnswer &#123; invocation -&gt;</span><br><span class="line">    <span class="keyword">val</span> listener = invocation.arguments[<span class="number">0</span>] <span class="keyword">as</span> ((String?) -&gt; <span class="built_in">Unit</span>)</span><br><span class="line">    listener.invoke(<span class="string">&quot;test&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Hogeインターフェースをモックしメソッド実行時の挙動を定義します。<br><code>InvocationOnMock</code>から<code>getOrCreate</code>の第1引数を取り出し、それを発火させます。<br>その結果、プロダクトコード側の<code>getOrCreate</code>メソッドがコールバックを返す挙動を単体テストで再現することができます。<br>Hogeの具象クラス側の実装が単体テストできない時等に有効です。</p>
+<h2 id="参考サイト"><a href="#参考サイト" class="headerlink" title="参考サイト"></a>参考サイト</h2><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/48204784/unit-test-for-kotlin-lambda-callback">https://stackoverflow.com/questions/48204784/unit-test-for-kotlin-lambda-callback</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.k-seito.tech/2021/08/20/how-to-write-unit-test-in-callback/" data-id="cl87w1fkq001218n12kjj0fcq" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mockito/" rel="tag">Mockito</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-use-version-name-properly" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/08/18/use-version-name-properly/" class="article-date">
+  <time datetime="2021-08-18T09:00:00.000Z" itemprop="datePublished">2021-08-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/08/18/use-version-name-properly/">バージョンコード取得方法の使い分け</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Android開発においてバージョンコードを取得する方法は私の知る限り２つあります。<br>１つはBuildConfigの定数を参照する方法、もう１つはPackageManagerから取得する方法です。<br>この２つをどう使い分ければ良いのか考えてみました。</p>
+<h2 id="バージョンコードの取得方法"><a href="#バージョンコードの取得方法" class="headerlink" title="バージョンコードの取得方法"></a>バージョンコードの取得方法</h2><p>改めてコードベースでバージョンコードの取得方法を確認してみます。それぞれ下記のような実装になります。</p>
+<h3 id="BuildConfigの定数を参照する"><a href="#BuildConfigの定数を参照する" class="headerlink" title="BuildConfigの定数を参照する"></a>BuildConfigの定数を参照する</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> versionCode: <span class="built_in">Int</span> = BuildConfig.VERSION_CODE</span><br></pre></td></tr></table></figure>
+<h3 id="PackageManagerから取り出す"><a href="#PackageManagerから取り出す" class="headerlink" title="PackageManagerから取り出す"></a>PackageManagerから取り出す</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">val</span> context = requireContext()</span><br><span class="line">    <span class="keyword">val</span> info: PackageInfo = context.packageManager.getPackageInfo(context.packageName, <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">val</span> version: <span class="built_in">Int</span> = info.versionCode</span><br><span class="line">&#125; <span class="keyword">catch</span> (e: PackageManager.NameNotFoundException) &#123;</span><br><span class="line">    e.printStackTrace()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>※API Level 28からは<code>versionCode</code>ではなく<code>getLongVersionCode()</code>を参照した方が良いみたいです。</p>
+<h2 id="使い分け"><a href="#使い分け" class="headerlink" title="使い分け"></a>使い分け</h2><p>結論から書くと、マルチモジュールを採用しているかどうかを基準にすると良いです。<br>なぜならマルチモジュール環境下の場合はappモジュールのBuildConfigを他のモジュールから参照できないため、BuildConfigを使った取得方法は使えません。<br>（正確には、使えないことはないですが他モジュールがappモジュールを参照する必要が出てくるため、モジュール構造的に無理が出てきたり循環参照が発生しやすくなったりします。）<br>対してPackageManagerから取得する方法はAndroid SDKが参照できる箇所なら問題なく使えるためマルチモジュール環境でも問題ありません。<br>バージョンネームの使い分けも同様の考え方で行けると思います。</p>
+<h2 id="参考サイト"><a href="#参考サイト" class="headerlink" title="参考サイト"></a>参考サイト</h2><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/4616095/how-can-you-get-the-build-version-number-of-your-android-application">https://stackoverflow.com/questions/4616095/how-can-you-get-the-build-version-number-of-your-android-application</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.k-seito.tech/2021/08/18/use-version-name-properly/" data-id="cl87w1fkt001v18n1hnbd0m2h" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-how-to-set-default-value-in-groovy" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/08/17/how-to-set-default-value-in-groovy/" class="article-date">
+  <time datetime="2021-08-17T09:00:00.000Z" itemprop="datePublished">2021-08-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/08/17/how-to-set-default-value-in-groovy/">GroovyでSystem.getenvの戻り値がnullだった時の対処法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><code>build.gradle</code>において下記のように環境変数から値を取り出してごにょごにょする時が稀によくあるのですが、取得できたりできなかったりする環境変数の時に対処に困ったのでメモを残します。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hoge = System.getenv(<span class="string">&quot;HOGE&quot;</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="解決方法"><a href="#解決方法" class="headerlink" title="解決方法"></a>解決方法</h2><p>Groovyではエルビス演算子が使えます。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hoge = System.getenv(<span class="string">&quot;HOGE&quot;</span>) ?: <span class="string">&quot;Default Value&quot;</span></span><br></pre></td></tr></table></figure>
+<p>知らんかった…</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.k-seito.tech/2021/08/17/how-to-set-default-value-in-groovy/" data-id="cl87w1fkp000x18n1ebw1099q" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Groovy/" rel="tag">Groovy</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-new-android-version-check" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/07/20/new-android-version-check/" class="article-date">
+  <time datetime="2021-07-20T09:00:00.000Z" itemprop="datePublished">2021-07-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/07/20/new-android-version-check/">Androidアプリ開発におけるキャッシュについて整理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Androidアプリのビルド時間を短縮する上で、キャッシュの仕組みを知るのはとても大事だと思い、Androidアプリ開発で使用する下記３つのキャッシュについて調査してみました。</p>
+<ul>
+<li>Incremental Build</li>
+<li>Gradle Build Cache</li>
+<li>Android Studioのシステムキャッシュ</li>
+</ul>
+<h2 id="Incremental-Build"><a href="#Incremental-Build" class="headerlink" title="Incremental Build"></a>Incremental Build</h2><h3 id="何者"><a href="#何者" class="headerlink" title="何者"></a>何者</h3><p>アプリをビルドすると<code>app/build/</code>配下に生成されるキャッシュたちのことです。<br>Gradleのタスク単位でキャッシュされており、<code>Task :app:preBuild UP-TO-DATE</code>のようにタスクの右端に<code>UP-TO-DATE</code>という記述がある場合はキャッシュが使用されたことになります。</p>
+<h3 id="どこにキャッシュされるか"><a href="#どこにキャッシュされるか" class="headerlink" title="どこにキャッシュされるか"></a>どこにキャッシュされるか</h3><p><code>app/build/</code>直下に生成されます。<br>より正確にはモジュールのルートディレクトリの直下に生成されます。</p>
+<h3 id="キャッシュのクリア方法"><a href="#キャッシュのクリア方法" class="headerlink" title="キャッシュのクリア方法"></a>キャッシュのクリア方法</h3><p>Android StudioでClean Projectを選択するかCLIで<code>./gradlew clean</code>を実行することでクリアされます。</p>
+<h2 id="Gradle-Build-Cache"><a href="#Gradle-Build-Cache" class="headerlink" title="Gradle Build Cache"></a>Gradle Build Cache</h2><h3 id="何者-1"><a href="#何者-1" class="headerlink" title="何者"></a>何者</h3><p>Gradleタスクのアウトプットをプロジェクトの外側に持つ仕組みで、プロジェクト間でキャッシュの共有ができるようです。<br>AGPのメジャーアップデート時などはこのキャッシュが悪さをすることが稀にあります。</p>
+<h3 id="どこにキャッシュされるか-1"><a href="#どこにキャッシュされるか-1" class="headerlink" title="どこにキャッシュされるか"></a>どこにキャッシュされるか</h3><p><code>~/.gradle/caches</code>にキャッシュされます。</p>
+<h3 id="キャッシュのクリア方法-1"><a href="#キャッシュのクリア方法-1" class="headerlink" title="キャッシュのクリア方法"></a>キャッシュのクリア方法</h3><p>キャッシュ置き場をごっそり削除します。<br>GUIで消すかCLIの場合は<code>rm -rf ~/.gradle/caches/</code>でも消せます。</p>
+<h2 id="Android-Studioのシステムキャッシュ"><a href="#Android-Studioのシステムキャッシュ" class="headerlink" title="Android Studioのシステムキャッシュ"></a>Android Studioのシステムキャッシュ</h2><h3 id="何者-2"><a href="#何者-2" class="headerlink" title="何者"></a>何者</h3><p>Android Studio自体が持つキャッシュのことです。<br>Project Structureの情報などが対象みたいです。</p>
+<h3 id="どこにキャッシュされるか-2"><a href="#どこにキャッシュされるか-2" class="headerlink" title="どこにキャッシュされるか"></a>どこにキャッシュされるか</h3><p><a target="_blank" rel="noopener" href="https://www.jetbrains.com/help/idea/invalidate-caches.html">公式サイト</a>を見る限り明記はされていません。が、おそらくAndroid Studioアプリ内のキャッシュだろうと推察します。<br>Android Studioのアップデート時にキャッシュ削除しますか？的なダイアログが出てきて削除している対象がここで言っているキャッシュの可能性がありますね。</p>
+<h3 id="キャッシュのクリア方法-2"><a href="#キャッシュのクリア方法-2" class="headerlink" title="キャッシュのクリア方法"></a>キャッシュのクリア方法</h3><p>Android Studio上で<code>Invalidate Caches / Restart</code>を選択します。<br>困ったときはだいたいこれで解決しますね。</p>
+<h2 id="参考サイト"><a href="#参考サイト" class="headerlink" title="参考サイト"></a>参考サイト</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://proandroiddev.com/caching-in-the-android-build-process-a52641a66b31">https://proandroiddev.com/caching-in-the-android-build-process-a52641a66b31</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.k-seito.tech/2021/07/20/new-android-version-check/" data-id="cl87w1fkr001b18n1clft02oz" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">次へ &amp;raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグ</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/" rel="tag">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cocoapods/" rel="tag">Cocoapods</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Groovy/" rel="tag">Groovy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetpack-Compose/" rel="tag">Jetpack Compose</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KMM/" rel="tag">KMM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mockito/" rel="tag">Mockito</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Raspberry-Pi/" rel="tag">Raspberry Pi</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Rust/" rel="tag">Rust</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E4%BD%9CPC/" rel="tag">自作PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9B%BB%E5%AD%90%E5%B7%A5%E4%BD%9C/" rel="tag">電子工作</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグクラウド</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/Cocoapods/" style="font-size: 10px;">Cocoapods</a> <a href="/tags/Groovy/" style="font-size: 10px;">Groovy</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Jetpack-Compose/" style="font-size: 15px;">Jetpack Compose</a> <a href="/tags/KMM/" style="font-size: 10px;">KMM</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Mockito/" style="font-size: 10px;">Mockito</a> <a href="/tags/Raspberry-Pi/" style="font-size: 10px;">Raspberry Pi</a> <a href="/tags/Rust/" style="font-size: 10px;">Rust</a> <a href="/tags/%E8%87%AA%E4%BD%9CPC/" style="font-size: 10px;">自作PC</a> <a href="/tags/%E9%9B%BB%E5%AD%90%E5%B7%A5%E4%BD%9C/" style="font-size: 10px;">電子工作</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">アーカイブ</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最近の投稿</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/09/13/deploy-kmm-library-via-specs-repo/">Kotlin Multiplatform Mobileで作成したライブラリをSpecs Repoを使って配布する時の設定</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/26/variable-length-array-cost-in-rust/">Rustの可変長配列を使用するときのコストについて</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/10/disable-touch-event-in-jetpack-compose/">Composableのイベント伝達を止める</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/15/how-to-detect-multitouch-in-jetpack-compose/">Jetpack Composeでマルチタップを検知する</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/19/compose-horizontalpager-workaround/">HorizontalPagerで最初に表示するページを指定する</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 Kazuto Seito<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/profile" class="mobile-nav-link">Profile</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

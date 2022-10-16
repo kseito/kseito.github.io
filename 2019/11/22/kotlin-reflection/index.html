@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Kotlin Reflectionに触れてみる | k-seito&#39;s memo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="AndroidのAPKをアップロードする時に表示されるようになった警告について調べたら、どうやらリフレクションを使ってAndroid SDKに含まれるクラスの公開されていないメソッド、プロパティを参照すると表示される警告らしいということが分かりました。しかし、今までリフレクションは単体テストレベルでプライベートメソッドを無理やりテストするくらいしか試したことがなく、Android SDKで公開され">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kotlin Reflectionに触れてみる">
+<meta property="og:url" content="https://www.k-seito.tech/2019/11/22/kotlin-reflection/index.html">
+<meta property="og:site_name" content="k-seito&#39;s memo">
+<meta property="og:description" content="AndroidのAPKをアップロードする時に表示されるようになった警告について調べたら、どうやらリフレクションを使ってAndroid SDKに含まれるクラスの公開されていないメソッド、プロパティを参照すると表示される警告らしいということが分かりました。しかし、今までリフレクションは単体テストレベルでプライベートメソッドを無理やりテストするくらいしか試したことがなく、Android SDKで公開され">
+<meta property="og:locale" content="ja_JP">
+<meta property="article:published_time" content="2019-11-22T00:58:14.000Z">
+<meta property="article:modified_time" content="2022-03-27T00:18:52.021Z">
+<meta property="article:author" content="Kazuto Seito">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="k-seito&#39;s memo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">k-seito&#39;s memo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/profile">Profile</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSSフィード"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="検索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://www.k-seito.tech"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-kotlin-reflection" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/22/kotlin-reflection/" class="article-date">
+  <time datetime="2019-11-22T00:58:14.000Z" itemprop="datePublished">2019-11-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Kotlin Reflectionに触れてみる
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>AndroidのAPKをアップロードする時に表示されるようになった<a target="_blank" rel="noopener" href="https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces">警告</a>について調べたら、どうやらリフレクションを使ってAndroid SDKに含まれるクラスの公開されていないメソッド、プロパティを参照すると表示される警告らしいということが分かりました。<br>しかし、今までリフレクションは単体テストレベルでプライベートメソッドを無理やりテストするくらいしか試したことがなく、Android SDKで公開されていない情報を本当に参照できるのか疑問に思ったので試してみました。<br><br/></p>
+<h2 id="準備"><a href="#準備" class="headerlink" title="準備"></a>準備</h2><h3 id="依存解決"><a href="#依存解決" class="headerlink" title="依存解決"></a>依存解決</h3><p>新しくAndroidプロジェクトを作成後、<code>implementation &quot;org.jetbrains.kotlin:kotlin-reflect:$kotlin_version&quot;</code>を追加して、Kotlinのリフレクションライブラリをインポートする。<br>これでリフレクションを使う準備ができました。</p>
+<h3 id="クラス作成"><a href="#クラス作成" class="headerlink" title="クラス作成"></a>クラス作成</h3><p>下記のような、プライベートメソッド・プロパティを持つクラスを作成します。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span></span>(<span class="keyword">val</span> id: <span class="built_in">Int</span>, <span class="keyword">val</span> name: String, <span class="keyword">private</span> <span class="keyword">val</span> description: String) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">getFullInfo</span><span class="params">()</span></span>: String &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;This user&#x27;s id is <span class="variable">$id</span>, name is <span class="variable">$name</span>&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<br/>
+<br/>
+
+<h2 id="自作クラスで試す"><a href="#自作クラスで試す" class="headerlink" title="自作クラスで試す"></a>自作クラスで試す</h2><h3 id="メソッドの参照"><a href="#メソッドの参照" class="headerlink" title="メソッドの参照"></a>メソッドの参照</h3><p>Kotlinリフレクションを使って特定のメソッドを呼びだします。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cls.memberFunctions</span><br><span class="line">    .filter &#123; it.name == <span class="string">&quot;getFullInfo&quot;</span> &#125;</span><br><span class="line">    .forEach &#123;</span><br><span class="line">        it.isAccessible = <span class="literal">true</span></span><br><span class="line">        println(<span class="string">&quot;This function name is <span class="subst">$&#123;it.name&#125;</span>. value is <span class="subst">$&#123;it.call(user)&#125;</span>&quot;</span>)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="出力"><a href="#出力" class="headerlink" title="出力"></a>出力</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">This function name is getFullInfo. value is This user&#39;s id is 1, name is kseito</span><br></pre></td></tr></table></figure>
+<h3 id="プロパティの参照"><a href="#プロパティの参照" class="headerlink" title="プロパティの参照"></a>プロパティの参照</h3><p>Kotlinリフレクションを使って特定のプロパティを参照します。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cls.memberProperties</span><br><span class="line">    .filter &#123; it.name == <span class="string">&quot;description&quot;</span> &#125;</span><br><span class="line">    .forEach &#123;</span><br><span class="line">        it.isAccessible = <span class="literal">true</span></span><br><span class="line">        println(<span class="string">&quot;<span class="subst">$&#123;it.name&#125;</span> value is <span class="subst">$&#123;it.get(user)&#125;</span>&quot;</span>)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="出力-1"><a href="#出力-1" class="headerlink" title="出力"></a>出力</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">description value is I love Splatoon!</span><br></pre></td></tr></table></figure>
+<br/>
+<br/>
+
+
+<h2 id="TextViewのプロパティ参照"><a href="#TextViewのプロパティ参照" class="headerlink" title="TextViewのプロパティ参照"></a>TextViewのプロパティ参照</h2><p>最後にAndroid SDKに含まれるクラスです。<br>みんな大好きTextViewのプライベートプロパティに対してリフレクションを使ってみます。<br>本来なら<code>getText()</code>で取得するテキストをリフレクションを使ってプロパティ参照してみます。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> textView = findViewById&lt;TextView&gt;(R.id.text_view)</span><br><span class="line"><span class="keyword">val</span> cls2 = TextView::<span class="class"><span class="keyword">class</span></span></span><br><span class="line">cls2.memberProperties</span><br><span class="line">    .filter &#123; it.name == <span class="string">&quot;mText&quot;</span> &#125;</span><br><span class="line">    .forEach &#123;</span><br><span class="line">        it.isAccessible = <span class="literal">true</span></span><br><span class="line">        println(<span class="string">&quot;<span class="subst">$&#123;it.name&#125;</span> value is <span class="subst">$&#123;it.get(textView)&#125;</span>&quot;</span>)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="出力-2"><a href="#出力-2" class="headerlink" title="出力"></a>出力</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mText value is Hello World!</span><br></pre></td></tr></table></figure>
+<p>無事取得できました。</p>
+<p>サンプルソースは<a target="_blank" rel="noopener" href="https://github.com/kseito/ReflectionPractice">こちら</a></p>
+<h2 id="参考サイト"><a href="#参考サイト" class="headerlink" title="参考サイト"></a>参考サイト</h2><p><a target="_blank" rel="noopener" href="https://qiita.com/HIkaruSato/items/d9a9b0ca4b1da77221fbjkjkjkjkaaaaa">https://qiita.com/HIkaruSato/items/d9a9b0ca4b1da77221fbjkjkjkjkaaaaa</a><br><a target="_blank" rel="noopener" href="https://qiita.com/KeithYokoma/items/9e692808095acf560bc9">https://qiita.com/KeithYokoma/items/9e692808095acf560bc9</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.k-seito.tech/2019/11/22/kotlin-reflection/" data-id="cl87w1fkq001618n13wfvbg7p" class="article-share-link">共有</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/12/03/okhttp-retry-setting/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">次の記事</strong>
+      <div class="article-nav-title">
+        
+          OkHttpのリトライ無効化
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/11/16/android-dev-summit-2019-extended-tokyo/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前の記事</strong>
+      <div class="article-nav-title">Android Dev Summit 2019 Extended Tokyo参加レポート</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグ</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/" rel="tag">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cocoapods/" rel="tag">Cocoapods</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Groovy/" rel="tag">Groovy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetpack-Compose/" rel="tag">Jetpack Compose</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KMM/" rel="tag">KMM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mockito/" rel="tag">Mockito</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Raspberry-Pi/" rel="tag">Raspberry Pi</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Rust/" rel="tag">Rust</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E4%BD%9CPC/" rel="tag">自作PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9B%BB%E5%AD%90%E5%B7%A5%E4%BD%9C/" rel="tag">電子工作</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグクラウド</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/Cocoapods/" style="font-size: 10px;">Cocoapods</a> <a href="/tags/Groovy/" style="font-size: 10px;">Groovy</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Jetpack-Compose/" style="font-size: 15px;">Jetpack Compose</a> <a href="/tags/KMM/" style="font-size: 10px;">KMM</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Mockito/" style="font-size: 10px;">Mockito</a> <a href="/tags/Raspberry-Pi/" style="font-size: 10px;">Raspberry Pi</a> <a href="/tags/Rust/" style="font-size: 10px;">Rust</a> <a href="/tags/%E8%87%AA%E4%BD%9CPC/" style="font-size: 10px;">自作PC</a> <a href="/tags/%E9%9B%BB%E5%AD%90%E5%B7%A5%E4%BD%9C/" style="font-size: 10px;">電子工作</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">アーカイブ</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最近の投稿</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/09/13/deploy-kmm-library-via-specs-repo/">Kotlin Multiplatform Mobileで作成したライブラリをSpecs Repoを使って配布する時の設定</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/26/variable-length-array-cost-in-rust/">Rustの可変長配列を使用するときのコストについて</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/10/disable-touch-event-in-jetpack-compose/">Composableのイベント伝達を止める</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/15/how-to-detect-multitouch-in-jetpack-compose/">Jetpack Composeでマルチタップを検知する</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/19/compose-horizontalpager-workaround/">HorizontalPagerで最初に表示するページを指定する</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 Kazuto Seito<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/profile" class="mobile-nav-link">Profile</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

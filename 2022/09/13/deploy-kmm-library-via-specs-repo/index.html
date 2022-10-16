@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Kotlin Multiplatform Mobileで作成したライブラリをSpecs Repoを使って配布する時の設定 | k-seito&#39;s memo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="KMMを使ってライブラリを作成しCocoapodsで配布する際に、デフォルトのpodspecファイルだとLinterでエラーになり配布できませんでした。試行錯誤した結果、下記のような修正を行うと無事に配布することができました。 spec.sourceの変更初期値のままだとエラーになります。URLを指定しましょう。 Before&amp;#123; :http&#x3D;&gt; &#39;&#39;&amp;#125; A">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kotlin Multiplatform Mobileで作成したライブラリをSpecs Repoを使って配布する時の設定">
+<meta property="og:url" content="https://www.k-seito.tech/2022/09/13/deploy-kmm-library-via-specs-repo/index.html">
+<meta property="og:site_name" content="k-seito&#39;s memo">
+<meta property="og:description" content="KMMを使ってライブラリを作成しCocoapodsで配布する際に、デフォルトのpodspecファイルだとLinterでエラーになり配布できませんでした。試行錯誤した結果、下記のような修正を行うと無事に配布することができました。 spec.sourceの変更初期値のままだとエラーになります。URLを指定しましょう。 Before&amp;#123; :http&#x3D;&gt; &#39;&#39;&amp;#125; A">
+<meta property="og:locale" content="ja_JP">
+<meta property="article:published_time" content="2022-09-13T03:00:00.000Z">
+<meta property="article:modified_time" content="2022-09-16T01:01:20.028Z">
+<meta property="article:author" content="Kazuto Seito">
+<meta property="article:tag" content="KMM">
+<meta property="article:tag" content="Cocoapods">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="k-seito&#39;s memo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">k-seito&#39;s memo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/profile">Profile</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSSフィード"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="検索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://www.k-seito.tech"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-deploy-kmm-library-via-specs-repo" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/09/13/deploy-kmm-library-via-specs-repo/" class="article-date">
+  <time datetime="2022-09-13T03:00:00.000Z" itemprop="datePublished">2022-09-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Kotlin Multiplatform Mobileで作成したライブラリをSpecs Repoを使って配布する時の設定
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>KMMを使ってライブラリを作成しCocoapodsで配布する際に、デフォルトのpodspecファイルだとLinterでエラーになり配布できませんでした。<br>試行錯誤した結果、下記のような修正を行うと無事に配布することができました。</p>
+<h2 id="spec-sourceの変更"><a href="#spec-sourceの変更" class="headerlink" title="spec.sourceの変更"></a>spec.sourceの変更</h2><p>初期値のままだとエラーになります。<br>URLを指定しましょう。</p>
+<h4 id="Before"><a href="#Before" class="headerlink" title="Before"></a>Before</h4><p><code>&#123; :http=&gt; &#39;&#39;&#125;</code></p>
+<h4 id="After"><a href="#After" class="headerlink" title="After"></a>After</h4><p><code>&#123; :git =&gt; &quot;git@github.com:ユーザー名/リポジトリ名.git&quot;, :tag =&gt; spec.version &#125;</code></p>
+<h2 id="spec-preserve-pathsの追加"><a href="#spec-preserve-pathsの追加" class="headerlink" title="spec.preserve_pathsの追加"></a>spec.preserve_pathsの追加</h2><p>preserve_pathsで指定されたファイル以外はダウンロード後に削除されてしまうようなので削除されたくないファイルを指定します。<br>下記のように全てのファイルを残すやり方でもいけました。</p>
+<p><code>spec.preserve_paths = &quot;**/*.*&quot;</code></p>
+<h2 id="spec-vendored-frameworksの変更"><a href="#spec-vendored-frameworksの変更" class="headerlink" title="spec.vendored_frameworksの変更"></a>spec.vendored_frameworksの変更</h2><p>プロジェクトのルートから見た相対パスを指定する必要がありました。</p>
+<h4 id="Before-1"><a href="#Before-1" class="headerlink" title="Before"></a>Before</h4><p><code>&#39;build/cocoapods/framework/shared.framework&#39;</code></p>
+<h4 id="After-1"><a href="#After-1" class="headerlink" title="After"></a>After</h4><p><code>&quot;shared/build/cocoapods/framework/shared.framework&quot;</code></p>
+<h2 id="spec-script-phasesの変更"><a href="#spec-script-phasesの変更" class="headerlink" title="spec.script_phasesの変更"></a>spec.script_phasesの変更</h2><p>REPO_ROOT=プロジェクトのルートになるようなので、その想定で相対パスとGradleタスクのパスを変更します。</p>
+<h4 id="Before-2"><a href="#Before-2" class="headerlink" title="Before"></a>Before</h4><p><code>&quot;$REPO_ROOT/../gradlew&quot; -p &quot;$REPO_ROOT&quot; $KOTLIN_PROJECT_PATH:syncFramework \</code></p>
+<h4 id="After-2"><a href="#After-2" class="headerlink" title="After"></a>After</h4><p><code>&quot;$REPO_ROOT/gradlew&quot; -p &quot;$REPO_ROOT&quot; :shared:syncFramework \</code></p>
+<h2 id="参考サイト"><a href="#参考サイト" class="headerlink" title="参考サイト"></a>参考サイト</h2><p><a target="_blank" rel="noopener" href="https://satoshun.github.io/2021/02/kmm-cocoapods-external-source/">https://satoshun.github.io/2021/02/kmm-cocoapods-external-source/</a><br><a target="_blank" rel="noopener" href="https://www.rubydoc.info/github/CocoaPods/Core/Pod">https://www.rubydoc.info/github/CocoaPods/Core/Pod</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.k-seito.tech/2022/09/13/deploy-kmm-library-via-specs-repo/" data-id="cl87w1fkn000l18n1gsfs9e4k" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cocoapods/" rel="tag">Cocoapods</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/KMM/" rel="tag">KMM</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2022/02/26/variable-length-array-cost-in-rust/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前の記事</strong>
+      <div class="article-nav-title">Rustの可変長配列を使用するときのコストについて</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグ</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/" rel="tag">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cocoapods/" rel="tag">Cocoapods</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Groovy/" rel="tag">Groovy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetpack-Compose/" rel="tag">Jetpack Compose</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KMM/" rel="tag">KMM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mockito/" rel="tag">Mockito</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Raspberry-Pi/" rel="tag">Raspberry Pi</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Rust/" rel="tag">Rust</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E4%BD%9CPC/" rel="tag">自作PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9B%BB%E5%AD%90%E5%B7%A5%E4%BD%9C/" rel="tag">電子工作</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグクラウド</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/Cocoapods/" style="font-size: 10px;">Cocoapods</a> <a href="/tags/Groovy/" style="font-size: 10px;">Groovy</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Jetpack-Compose/" style="font-size: 15px;">Jetpack Compose</a> <a href="/tags/KMM/" style="font-size: 10px;">KMM</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Mockito/" style="font-size: 10px;">Mockito</a> <a href="/tags/Raspberry-Pi/" style="font-size: 10px;">Raspberry Pi</a> <a href="/tags/Rust/" style="font-size: 10px;">Rust</a> <a href="/tags/%E8%87%AA%E4%BD%9CPC/" style="font-size: 10px;">自作PC</a> <a href="/tags/%E9%9B%BB%E5%AD%90%E5%B7%A5%E4%BD%9C/" style="font-size: 10px;">電子工作</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">アーカイブ</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最近の投稿</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/09/13/deploy-kmm-library-via-specs-repo/">Kotlin Multiplatform Mobileで作成したライブラリをSpecs Repoを使って配布する時の設定</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/26/variable-length-array-cost-in-rust/">Rustの可変長配列を使用するときのコストについて</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/10/disable-touch-event-in-jetpack-compose/">Composableのイベント伝達を止める</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/15/how-to-detect-multitouch-in-jetpack-compose/">Jetpack Composeでマルチタップを検知する</a>
+          </li>
+        
+          <li>
+            <a href="/2021/12/19/compose-horizontalpager-workaround/">HorizontalPagerで最初に表示するページを指定する</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 Kazuto Seito<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/profile" class="mobile-nav-link">Profile</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
