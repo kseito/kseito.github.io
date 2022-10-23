@@ -97,7 +97,7 @@
 <h2 id="spec-vendored-frameworksの変更"><a href="#spec-vendored-frameworksの変更" class="headerlink" title="spec.vendored_frameworksの変更"></a>spec.vendored_frameworksの変更</h2><p>プロジェクトのルートから見た相対パスを指定する必要がありました。</p>
 <h4 id="Before-1"><a href="#Before-1" class="headerlink" title="Before"></a>Before</h4><p><code>&#39;build/cocoapods/framework/shared.framework&#39;</code></p>
 <h4 id="After-1"><a href="#After-1" class="headerlink" title="After"></a>After</h4><p><code>&quot;shared/build/cocoapods/framework/shared.framework&quot;</code></p>
-<h2 id="spec-script-phasesの変更"><a href="#spec-script-phasesの変更" class="headerlink" title="spec.script_phasesの変更"></a>spec.script_phasesの変更</h2><p>REPO_ROOT=プロジェクトのルートになるようなので、その想定で相対パスとGradleタスクのパスを変更します。</p>
+<h2 id="spec-script-phasesの変更"><a href="#spec-script-phasesの変更" class="headerlink" title="spec.script_phasesの変更"></a>spec.script_phasesの変更</h2><p>REPO_ROOT&#x3D;プロジェクトのルートになるようなので、その想定で相対パスとGradleタスクのパスを変更します。</p>
 <h4 id="Before-2"><a href="#Before-2" class="headerlink" title="Before"></a>Before</h4><p><code>&quot;$REPO_ROOT/../gradlew&quot; -p &quot;$REPO_ROOT&quot; $KOTLIN_PROJECT_PATH:syncFramework \</code></p>
 <h4 id="After-2"><a href="#After-2" class="headerlink" title="After"></a>After</h4><p><code>&quot;$REPO_ROOT/gradlew&quot; -p &quot;$REPO_ROOT&quot; :shared:syncFramework \</code></p>
 <h2 id="参考サイト"><a href="#参考サイト" class="headerlink" title="参考サイト"></a>参考サイト</h2><p><a target="_blank" rel="noopener" href="https://satoshun.github.io/2021/02/kmm-cocoapods-external-source/">https://satoshun.github.io/2021/02/kmm-cocoapods-external-source/</a><br><a target="_blank" rel="noopener" href="https://www.rubydoc.info/github/CocoaPods/Core/Pod">https://www.rubydoc.info/github/CocoaPods/Core/Pod</a></p>
@@ -105,7 +105,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://www.k-seito.tech/2022/09/13/deploy-kmm-library-via-specs-repo/" data-id="cl87w1fkn000l18n1gsfs9e4k" class="article-share-link">共有</a>
+      <a data-url="https://www.k-seito.tech/2022/09/13/deploy-kmm-library-via-specs-repo/" data-id="cl8035ufu0000vwn15t3y1ta6" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cocoapods/" rel="tag">Cocoapods</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/KMM/" rel="tag">KMM</a></li></ul>
@@ -157,7 +157,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://www.k-seito.tech/2022/02/26/variable-length-array-cost-in-rust/" data-id="cl87w1fkt001x18n15we73bcl" class="article-share-link">共有</a>
+      <a data-url="https://www.k-seito.tech/2022/02/26/variable-length-array-cost-in-rust/" data-id="cl17qgifk00248gn189jrfbfv" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Rust/" rel="tag">Rust</a></li></ul>
@@ -208,7 +208,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://www.k-seito.tech/2022/02/10/disable-touch-event-in-jetpack-compose/" data-id="cl87w1fkn000j18n14dgg0yl0" class="article-share-link">共有</a>
+      <a data-url="https://www.k-seito.tech/2022/02/10/disable-touch-event-in-jetpack-compose/" data-id="cl17qgif6000g8gn1f880gh4f" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jetpack-Compose/" rel="tag">Jetpack Compose</a></li></ul>
@@ -250,7 +250,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://www.k-seito.tech/2022/01/15/how-to-detect-multitouch-in-jetpack-compose/" data-id="cl87w1fkp000u18n11f2a49js" class="article-share-link">共有</a>
+      <a data-url="https://www.k-seito.tech/2022/01/15/how-to-detect-multitouch-in-jetpack-compose/" data-id="cl17qgif9000s8gn17v6fcnp2" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jetpack-Compose/" rel="tag">Jetpack Compose</a></li></ul>
@@ -298,7 +298,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://www.k-seito.tech/2021/12/19/compose-horizontalpager-workaround/" data-id="cl87w1fkl000918n11g97h4v0" class="article-share-link">共有</a>
+      <a data-url="https://www.k-seito.tech/2021/12/19/compose-horizontalpager-workaround/" data-id="cl17qgif400098gn1hd9c9af7" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jetpack-Compose/" rel="tag">Jetpack Compose</a></li></ul>
@@ -348,7 +348,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://www.k-seito.tech/2021/10/24/droidkaigi-2021/" data-id="cl87w1fkm000g18n1fdbp4cji" class="article-share-link">共有</a>
+      <a data-url="https://www.k-seito.tech/2021/10/24/droidkaigi-2021/" data-id="cl17qgif7000j8gn10nw8hmke" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li></ul>
@@ -391,7 +391,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://www.k-seito.tech/2021/08/20/how-to-write-unit-test-in-callback/" data-id="cl87w1fkq001218n12kjj0fcq" class="article-share-link">共有</a>
+      <a data-url="https://www.k-seito.tech/2021/08/20/how-to-write-unit-test-in-callback/" data-id="cl17qgif9000x8gn16ypiesfm" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mockito/" rel="tag">Mockito</a></li></ul>
@@ -436,7 +436,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://www.k-seito.tech/2021/08/18/use-version-name-properly/" data-id="cl87w1fkt001v18n1hnbd0m2h" class="article-share-link">共有</a>
+      <a data-url="https://www.k-seito.tech/2021/08/18/use-version-name-properly/" data-id="cl17qgifk00238gn118ge8s6c" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li></ul>
@@ -479,7 +479,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://www.k-seito.tech/2021/08/17/how-to-set-default-value-in-groovy/" data-id="cl87w1fkp000x18n1ebw1099q" class="article-share-link">共有</a>
+      <a data-url="https://www.k-seito.tech/2021/08/17/how-to-set-default-value-in-groovy/" data-id="cl17qgif8000o8gn1a5j5book" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Groovy/" rel="tag">Groovy</a></li></ul>
@@ -535,7 +535,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://www.k-seito.tech/2021/07/20/new-android-version-check/" data-id="cl87w1fkr001b18n1clft02oz" class="article-share-link">共有</a>
+      <a data-url="https://www.k-seito.tech/2021/07/20/new-android-version-check/" data-id="cl17qgifb00168gn1hfgpcjkf" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li></ul>
