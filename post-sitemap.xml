@@ -2,14 +2,14 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
     <url>
-        <loc>https://www.k-seito.tech/</loc>
+        <loc>https://kseito.github.io/</loc>
         <changefreq>daily</changefreq>
         <priority>1</priority>
     </url>
 
 
     <url>
-        <loc>https://www.k-seito.tech/2022/09/13/deploy-kmm-library-via-specs-repo/</loc>
+        <loc>https://kseito.github.io/2022/09/13/deploy-kmm-library-via-specs-repo/</loc>
         <lastmod>2022-09-16T01:01:20.028Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -17,7 +17,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2019/10/29/weird_behavior_camera_permission/</loc>
+        <loc>https://kseito.github.io/2019/10/29/weird_behavior_camera_permission/</loc>
         <lastmod>2022-03-27T00:19:08.635Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -25,7 +25,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2022/02/26/variable-length-array-cost-in-rust/</loc>
+        <loc>https://kseito.github.io/2022/02/26/variable-length-array-cost-in-rust/</loc>
         <lastmod>2022-03-27T00:19:07.272Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -33,7 +33,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2021/08/18/use-version-name-properly/</loc>
+        <loc>https://kseito.github.io/2021/08/18/use-version-name-properly/</loc>
         <lastmod>2022-03-27T00:19:05.874Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -41,7 +41,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2021/05/31/unknown-words-on-homebrew-pc/</loc>
+        <loc>https://kseito.github.io/2021/05/31/unknown-words-on-homebrew-pc/</loc>
         <lastmod>2022-03-27T00:19:04.566Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -49,7 +49,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2020/04/03/teaching-is-important/</loc>
+        <loc>https://kseito.github.io/2020/04/03/teaching-is-important/</loc>
         <lastmod>2022-03-27T00:19:03.235Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -57,7 +57,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2021/03/18/robolectric-language-setting/</loc>
+        <loc>https://kseito.github.io/2021/03/18/robolectric-language-setting/</loc>
         <lastmod>2022-03-27T00:19:01.732Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -65,7 +65,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2021/04/19/replacing-dagger-using-assisted-inject/</loc>
+        <loc>https://kseito.github.io/2021/04/19/replacing-dagger-using-assisted-inject/</loc>
         <lastmod>2022-03-27T00:19:00.303Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -73,7 +73,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2020/12/18/problem-with-using-simpledateformat-on-android-6/</loc>
+        <loc>https://kseito.github.io/2020/12/18/problem-with-using-simpledateformat-on-android-6/</loc>
         <lastmod>2022-03-27T00:18:59.110Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -81,7 +81,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2021/01/16/picasso-without-imageview/</loc>
+        <loc>https://kseito.github.io/2021/01/16/picasso-without-imageview/</loc>
         <lastmod>2022-03-27T00:18:57.900Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -89,7 +89,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2019/12/03/okhttp-retry-setting/</loc>
+        <loc>https://kseito.github.io/2019/12/03/okhttp-retry-setting/</loc>
         <lastmod>2022-03-27T00:18:56.419Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -97,7 +97,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2021/07/20/new-android-version-check/</loc>
+        <loc>https://kseito.github.io/2021/07/20/new-android-version-check/</loc>
         <lastmod>2022-03-27T00:18:54.959Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -105,7 +105,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2019/12/20/mpandroidchart-useage/</loc>
+        <loc>https://kseito.github.io/2019/12/20/mpandroidchart-useage/</loc>
         <lastmod>2022-03-27T00:18:53.232Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -113,7 +113,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2019/11/22/kotlin-reflection/</loc>
+        <loc>https://kseito.github.io/2019/11/22/kotlin-reflection/</loc>
         <lastmod>2022-03-27T00:18:52.021Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -121,7 +121,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2020/01/14/kotlin-inline-function/</loc>
+        <loc>https://kseito.github.io/2020/01/14/kotlin-inline-function/</loc>
         <lastmod>2022-03-27T00:18:50.788Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -129,7 +129,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2020/09/16/image-capture-from-android-10/</loc>
+        <loc>https://kseito.github.io/2020/09/16/image-capture-from-android-10/</loc>
         <lastmod>2022-03-27T00:18:48.521Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -137,7 +137,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2021/08/20/how-to-write-unit-test-in-callback/</loc>
+        <loc>https://kseito.github.io/2021/08/20/how-to-write-unit-test-in-callback/</loc>
         <lastmod>2022-03-27T00:18:47.450Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -145,7 +145,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2022/01/15/how-to-detect-multitouch-in-jetpack-compose/</loc>
+        <loc>https://kseito.github.io/2022/01/15/how-to-detect-multitouch-in-jetpack-compose/</loc>
         <lastmod>2022-03-27T00:18:45.648Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -153,7 +153,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2021/07/08/how-to-check-object-size-in-android/</loc>
+        <loc>https://kseito.github.io/2021/07/08/how-to-check-object-size-in-android/</loc>
         <lastmod>2022-03-27T00:18:44.489Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -161,7 +161,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2021/04/24/how-to-add-new-header-item-on-hexo/</loc>
+        <loc>https://kseito.github.io/2021/04/24/how-to-add-new-header-item-on-hexo/</loc>
         <lastmod>2022-03-27T00:18:43.222Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -169,7 +169,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2021/02/19/edittext-rotation/</loc>
+        <loc>https://kseito.github.io/2021/02/19/edittext-rotation/</loc>
         <lastmod>2022-03-27T00:18:41.983Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -177,7 +177,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2021/10/24/droidkaigi-2021/</loc>
+        <loc>https://kseito.github.io/2021/10/24/droidkaigi-2021/</loc>
         <lastmod>2022-03-27T00:18:39.275Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -185,7 +185,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2022/02/10/disable-touch-event-in-jetpack-compose/</loc>
+        <loc>https://kseito.github.io/2022/02/10/disable-touch-event-in-jetpack-compose/</loc>
         <lastmod>2022-03-27T00:18:36.575Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -193,7 +193,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2020/11/25/creating_new_signature_key_on_android_studio/</loc>
+        <loc>https://kseito.github.io/2020/11/25/creating_new_signature_key_on_android_studio/</loc>
         <lastmod>2022-03-27T00:18:34.858Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -201,7 +201,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2020/07/08/crashlytics-migration/</loc>
+        <loc>https://kseito.github.io/2020/07/08/crashlytics-migration/</loc>
         <lastmod>2022-03-27T00:18:30.175Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -209,7 +209,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2021/12/19/compose-horizontalpager-workaround/</loc>
+        <loc>https://kseito.github.io/2021/12/19/compose-horizontalpager-workaround/</loc>
         <lastmod>2022-03-27T00:18:27.709Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -217,7 +217,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2021/05/15/co2-sensor-with-raspbery-pi/</loc>
+        <loc>https://kseito.github.io/2021/05/15/co2-sensor-with-raspbery-pi/</loc>
         <lastmod>2022-03-27T00:18:25.529Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -225,7 +225,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2020/08/21/android-video-player-speed-control/</loc>
+        <loc>https://kseito.github.io/2020/08/21/android-video-player-speed-control/</loc>
         <lastmod>2022-03-27T00:18:24.160Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -233,7 +233,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2020/02/11/android-sharedpreferences-performance/</loc>
+        <loc>https://kseito.github.io/2020/02/11/android-sharedpreferences-performance/</loc>
         <lastmod>2022-03-27T00:18:21.903Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -241,7 +241,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2020/10/25/android-memory-leak/</loc>
+        <loc>https://kseito.github.io/2020/10/25/android-memory-leak/</loc>
         <lastmod>2022-03-27T00:18:15.392Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -249,7 +249,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2019/11/16/android-dev-summit-2019-extended-tokyo/</loc>
+        <loc>https://kseito.github.io/2019/11/16/android-dev-summit-2019-extended-tokyo/</loc>
         <lastmod>2022-03-27T00:18:08.786Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -257,7 +257,7 @@
     </url>
 
     <url>
-        <loc>https://www.k-seito.tech/2021/08/17/how-to-set-default-value-in-groovy/</loc>
+        <loc>https://kseito.github.io/2021/08/17/how-to-set-default-value-in-groovy/</loc>
         <lastmod>2022-03-27T00:17:43.082Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>

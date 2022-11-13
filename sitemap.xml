@@ -3,17 +3,17 @@
 
 
     <sitemap>
-        <loc>https://www.k-seito.tech/post-sitemap.xml</loc>
+        <loc>https://kseito.github.io/post-sitemap.xml</loc>
         <lastmod>2022-09-16T01:01:20.028Z</lastmod>
     </sitemap>
 
     <sitemap>
-        <loc>https://www.k-seito.tech/page-sitemap.xml</loc>
+        <loc>https://kseito.github.io/page-sitemap.xml</loc>
         <lastmod>2022-03-26T10:39:35.641Z</lastmod>
     </sitemap>
 
     <sitemap>
-        <loc>https://www.k-seito.tech/tag-sitemap.xml</loc>
+        <loc>https://kseito.github.io/tag-sitemap.xml</loc>
         <lastmod>2022-09-16T01:01:20.028Z</lastmod>
     </sitemap>
 
