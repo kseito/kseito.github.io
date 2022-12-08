@@ -102,16 +102,16 @@
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">hoge</span><span class="params">(x: <span class="type">Int</span>, y: <span class="type">Int</span>, function: (<span class="type">a</span>: <span class="type">Int</span>, <span class="type">b</span>: <span class="type">Int</span>) -&gt; <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">    function(x, y)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>この関数をまずはこのまま1億回呼んでみます。</p>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">1.</span><span class="number">.100_000_000</span>).map &#123;</span><br><span class="line">    hoge(it, it) &#123; a, b -&gt; a + b &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>速度は、(1009+963+945)/3=972.3msでした。<br>次に<code>inline</code>修飾子をつけて試してみます。</p>
+<p>速度は、(1009+963+945)&#x2F;3&#x3D;972.3msでした。<br>次に<code>inline</code>修飾子をつけて試してみます。</p>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">inline</span> <span class="function"><span class="keyword">fun</span> <span class="title">hoge</span><span class="params">(x: <span class="type">Int</span>, y: <span class="type">Int</span>, function: (<span class="type">a</span>: <span class="type">Int</span>, <span class="type">b</span>: <span class="type">Int</span>) -&gt; <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">    function(x, y)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>結果は、(872+878+848)/3=866msでした。</p>
+<p>結果は、(872+878+848)&#x2F;3&#x3D;866msでした。</p>
 <h2 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h2><p>今回はMacbook Proを使ったこともあり1億回呼び出しして100ms程度の差に留まりましたが、格安スマホなどで試せば差はさらに顕著になるかと思います。<br>何れにせよ、ループ処理の中で高階関数をパラメータに持つ関数を呼びだす場合はインライン関数を使っておいた方がパフォーマンスが良くなることがわかりました。</p>
 <h2 id="参考URL"><a href="#参考URL" class="headerlink" title="参考URL"></a>参考URL</h2><p><a target="_blank" rel="noopener" href="https://dogwood008.github.io/kotlin-web-site-ja/docs/reference/lambdas.html">https://dogwood008.github.io/kotlin-web-site-ja/docs/reference/lambdas.html</a><br><a target="_blank" rel="noopener" href="https://qiita.com/sekitaka_1214/items/749f824e04d6fda4733c">https://qiita.com/sekitaka_1214/items/749f824e04d6fda4733c</a><br><a target="_blank" rel="noopener" href="https://qiita.com/satoru_takeuchi/items/5d5eacfd805bd5289311">https://qiita.com/satoru_takeuchi/items/5d5eacfd805bd5289311</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://kseito.github.io/2020/01/14/kotlin-inline-function/" data-id="cl17qgifa000z8gn10wyq96jp" class="article-share-link">共有</a>
+      <a data-url="https://kseito.github.io/2020/01/14/kotlin-inline-function/" data-id="clbf1y9gp000xc6n1a6jm6wvn" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li></ul>
