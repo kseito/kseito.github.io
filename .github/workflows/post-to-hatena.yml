@@ -1,0 +1,59 @@
+name: Post new articles to Hatena Blog
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - '_posts/**/*.md'
+
+jobs:
+  post-to-hatena:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # 前のコミットと比較するため
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: false
+
+      - name: Detect new posts
+        id: detect
+        run: |
+          # 新しく追加された記事ファイルを検出
+          NEW_POSTS=$(git diff --name-only --diff-filter=A HEAD~1 HEAD | grep '^_posts/.*\.md$' || true)
+
+          if [ -z "$NEW_POSTS" ]; then
+            echo "No new posts found"
+            echo "has_new_posts=false" >> $GITHUB_OUTPUT
+          else
+            echo "New posts found:"
+            echo "$NEW_POSTS"
+            echo "has_new_posts=true" >> $GITHUB_OUTPUT
+            # 複数ファイルを配列として保存
+            echo "$NEW_POSTS" > /tmp/new_posts.txt
+          fi
+
+      - name: Post to Hatena Blog
+        if: steps.detect.outputs.has_new_posts == 'true'
+        env:
+          HATENA_ID: ${{ secrets.HATENA_ID }}
+          HATENA_API_KEY: ${{ secrets.HATENA_API_KEY }}
+          HATENA_BLOG_ID: ${{ secrets.HATENA_BLOG_ID }}
+        run: |
+          # 実行権限を付与
+          chmod +x .github/scripts/post_to_hatena.rb
+
+          # 新規投稿ファイルごとに処理
+          while IFS= read -r post_file; do
+            if [ -n "$post_file" ]; then
+              echo "Processing: $post_file"
+              .github/scripts/post_to_hatena.rb "$post_file"
+              echo "---"
+            fi
+          done < /tmp/new_posts.txt
