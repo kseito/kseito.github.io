@@ -1,0 +1,4 @@
+# Main navigation
+main:
+  - title: "About"
+    url: /about/
