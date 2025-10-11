@@ -54,7 +54,7 @@ entry_elem = entry.add_element('entry', {
 })
 
 entry_elem.add_element('title').text = title
-entry_elem.add_element('content', {'type' => 'text/markdown'}).text = body
+entry_elem.add_element('content', {'type' => 'text/x-markdown'}).text = body
 
 # カテゴリ（タグ）を追加
 all_tags.each do |tag|
