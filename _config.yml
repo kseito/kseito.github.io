@@ -39,6 +39,13 @@ lang: ja
 # Minimal Mistakes Theme Settings
 minimal_mistakes_skin: "default" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
 
+# Analytics
+analytics:
+  provider: "google-gtag" # false (default), "google", "google-universal", "google-gtag", "custom"
+  google:
+    tracking_id: "G-MENHT89GLC"
+    anonymize_ip: false # true, false (default)
+
 # Site Author
 author:
   name: "kseito"
