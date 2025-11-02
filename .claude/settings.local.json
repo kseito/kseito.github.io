@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(bundle install)",
-      "Bash(gh run view:*)"
+      "Bash(gh run view:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []
