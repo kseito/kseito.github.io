@@ -2,8 +2,8 @@
 layout: single
 title: "安心を得るためにテストコードを書く"
 date: 2025-12-13 08:09:06 +0900
-categories: []
-tags: []
+categories: [tech]
+tags: [Testing, AI, 思考]
 ---
 ## はじめに
 
