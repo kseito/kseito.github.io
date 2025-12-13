@@ -11,6 +11,8 @@ permalink: /about/
 ### RewardedTodo
 Todoistと連携してタスク完了時にポイントを獲得できるAndroidアプリです。新しいライブラリや技術の実験場としても活用しています。
 
+<img src="/assets/images/about/rewarded-todo-image.png" alt="RewardedTodoのスクリーンショット" width="30%">
+
 **技術スタック:**
 - Kotlin
 - Jetpack Compose + Material Design
@@ -21,6 +23,8 @@ Todoistと連携してタスク完了時にポイントを獲得できるAndroid
 
 ### SimplePodcastPlayer
 Kotlin MultiplatformとCompose Multiplatformを使用したクロスプラットフォーム対応のポッドキャストプレイヤーです。AndroidとiOSの両方で動作します。Vibe Coding気味に開発しています。
+
+<img src="/assets/images/about/simple-podcast-player-image.png" alt="SimplePodcastPlayerのスクリーンショット" width="30%">
 
 **主な機能:**
 - ポッドキャスト検索
