@@ -100,6 +100,51 @@ Reload your browser to see the updates.
 Push to the `main` branch and GitHub Actions will automatically build and deploy the site.
 Changes will be live on GitHub Pages within a few minutes.
 
+## Linting with textlint
+
+This project uses [textlint](https://textlint.github.io/) to maintain consistent Japanese writing quality.
+
+### Prerequisites
+
+- Node.js 18.0 or higher
+- npm
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Running textlint
+
+Check all posts for writing issues:
+
+```bash
+npm run lint
+```
+
+Automatically fix issues where possible:
+
+```bash
+npm run lint:fix
+```
+
+Check a specific post:
+
+```bash
+npx textlint _posts/YYYY-MM-DD-your-post.md
+```
+
+### textlint Rules
+
+The project uses the following rule presets configured for a friendly, essay-style tone:
+
+- **preset-ja-spacing**: Japanese spacing rules
+- **preset-ja-technical-writing**: Technical writing rules (configured loosely)
+- **no-doubled-joshi**: Checks for repeated particles (助詞) in sentences
+
+Configuration can be customized in `.textlintrc.json`.
+
 ## Directory Structure
 
 ```

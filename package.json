@@ -1,0 +1,19 @@
+{
+  "name": "kseito-github-io",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Blog site with textlint",
+  "scripts": {
+    "lint": "textlint '_posts/**/*.md'",
+    "lint:fix": "textlint --fix '_posts/**/*.md'"
+  },
+  "devDependencies": {
+    "textlint": "^15.5.1",
+    "textlint-rule-no-doubled-joshi": "^5.1.1",
+    "textlint-rule-preset-ja-spacing": "^2.4.3",
+    "textlint-rule-preset-ja-technical-writing": "^12.0.2"
+  },
+  "keywords": [],
+  "author": "kseito",
+  "license": "MIT"
+}
