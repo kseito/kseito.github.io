@@ -156,6 +156,7 @@ Configuration can be customized in `.textlintrc.json`.
 ├── _layouts/            # Layout templates
 ├── _site/               # Generated static files (gitignored)
 ├── about.markdown       # About page
+├── app-policies/        # Privacy policies for discontinued apps
 ├── index.html           # Homepage
 ├── Gemfile              # Ruby dependencies
 └── .github/workflows/   # GitHub Actions configuration
