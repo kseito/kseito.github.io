@@ -1,0 +1,22 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+search: false
+---
+
+@charset "utf-8";
+
+/* テーマ変数の上書き。@import より前に書く必要がある */
+
+/* 本文フォントサイズ
+   既定では画面幅に応じて 16 / 18 / 20 / 22px と拡大するが、
+   大画面で文字が大きくなりすぎるため拡大幅を抑える */
+$doc-font-size: 16px;
+$doc-font-size-medium: 16px;
+$doc-font-size-large: 17px;
+$doc-font-size-x-large: 18px;
+
+/* コンテンツの最大幅。既定の 1280px では大画面で左右の余白が過大になる */
+$max-width: 1600px;
+
+@import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
+@import "minimal-mistakes"; // main partials
